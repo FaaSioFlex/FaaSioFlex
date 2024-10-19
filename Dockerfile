@@ -1,10 +1,15 @@
-# Usa la imagen oficial de Golang como base
-FROM golang:1.20 AS builder
+# Usar una imagen base de Go
+FROM golang:1.20 AS builder  # Cambia 1.20 a la versión de Go que necesitas
 
-# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia los archivos de tu aplicación al contenedor
+# Copia los archivos go.mod y go.sum
+COPY go.mod go.sum ./
+
+# Descarga las dependencias
+RUN go mod download
+
+# Copia el resto de tu código fuente
 COPY . .
 
 # Compila la aplicación
@@ -13,11 +18,13 @@ RUN go build -o hello-world .
 # Usa una imagen más ligera para ejecutar la aplicación
 FROM alpine:latest
 
-# Copia el binario compilado desde la etapa de construcción
+WORKDIR /root/
+
+# Copia el binario desde la etapa de construcción
 COPY --from=builder /app/hello-world .
 
-# Expone el puerto en el que se ejecuta la aplicación
+# Expone el puerto en el que escucha tu aplicación
 EXPOSE 8080
 
-# Comando por defecto para ejecutar la aplicación
+# Comando para ejecutar tu aplicación
 CMD ["./hello-world"]
