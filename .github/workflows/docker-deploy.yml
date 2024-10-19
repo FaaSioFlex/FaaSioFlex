@@ -6,7 +6,9 @@ on:
       - main
 
 jobs:
-  build:
+env:
+  ACTIONS_STEP_DEBUG: true
+build:
     runs-on: ubuntu-latest
 
     steps:
