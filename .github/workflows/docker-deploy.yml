@@ -3,7 +3,7 @@ name: Docker CI/CD
 on:
   push:
     branches:
-      - main  #Lo haremos en la rama que estemos trabajando en cad amomento.
+      - main  # Lo haremos en la rama que estemos trabajando en cada momento.
 
 jobs:
   build:
@@ -16,21 +16,41 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
+    - name: Check if Dockerfile Exists
+      id: check_dockerfile
+      run: |
+        if [ ! -f Dockerfile ]; then
+          echo "Dockerfile not found, skipping build."
+          exit 0
+        fi
+
     - name: Build Docker Image
+      if: steps.check_dockerfile.outcome == 'success'
       run: |
         docker build -t your-image-name:latest .
       
+    - name: Check if Docker Image Exists
+      id: check_image
+      run: |
+        if ! docker images -q your-image-name:latest; then
+          echo "No Docker image found. No image was built."
+          exit 0
+        fi
+
     - name: Run Tests
+      if: steps.check_image.outcome == 'success'
       run: |
         docker run --rm your-image-name:latest your-test-command
 
     - name: Login to Docker Hub
+      if: steps.check_image.outcome == 'success'
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKER_USERNAME }}  # Define este secreto en tu repositorio
         password: ${{ secrets.DOCKER_PASSWORD }}  # Define este secreto en tu repositorio
 
     - name: Push Docker Image
+      if: steps.check_image.outcome == 'success'
       run: |
         docker push your-image-name:latest
 
@@ -43,5 +63,6 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Deploy to Server
+      if: success()
       run: |
         ssh user@your-server-ip "docker pull your-image-name:latest && docker run -d your-image-name:latest"
