@@ -12,7 +12,7 @@ COPY src/go.sum .
 RUN go mod download
 
 # Copiar el código fuente desde la carpeta src
-COPY src/ .  # Copiar todos los archivos de src a /app en el contenedor
+COPY .  # Copiar todos los archivos de src a /app en el contenedor
 
 # Compilar la aplicación
 RUN go build -o hello-world .
