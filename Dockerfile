@@ -1,14 +1,18 @@
 # Usar una imagen base de Go
 FROM golang:1.23.2 AS builder
+
 # Establecer el directorio de trabajo
 WORKDIR /app
-# Copiar los archivos Go al contenedor
-COPY go.mod .
-COPY go.sum .
 
-RUN go mod download  # Descargar las dependencias
+# Copiar los archivos Go al contenedor desde el directorio src
+COPY src/go.mod . 
+COPY src/go.sum . 
 
-COPY . .  # Copiar el resto de los archivos de la aplicación
+# Descargar las dependencias
+RUN go mod download
+
+# Copiar el código fuente desde la carpeta src
+COPY src/ .  # Copiar todos los archivos de src a /app en el contenedor
 
 # Compilar la aplicación
 RUN go build -o hello-world .
