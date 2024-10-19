@@ -1,11 +1,9 @@
 # Usar una imagen base de Go
-FROM golang:1.23.2 AS builder  # Cambia 1.20 a la versión de Go que necesitas
-
+FROM golang:1.23.2 AS builder
 # Establecer el directorio de trabajo
 WORKDIR /app
-
 # Copiar los archivos Go al contenedor
-COPY go.mod . 
+COPY go.mod .
 COPY go.sum .
 
 RUN go mod download  # Descargar las dependencias
