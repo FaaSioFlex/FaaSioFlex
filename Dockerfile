@@ -16,6 +16,10 @@ COPY src/ ./
 # Compilar la aplicación
 RUN go build -o my-go-app -v
 
+# Agregar comandos para depuración
+RUN echo "Contenido del directorio /app:" && ls -l /app
+RUN echo "Permisos del binario:" && ls -l /app/my-go-app
+
 # Usar una imagen base más pequeña para la producción
 FROM alpine:latest
 
@@ -24,6 +28,9 @@ WORKDIR /root/
 
 # Copiar el binario compilado desde la etapa anterior
 COPY --from=builder /app/my-go-app .
+
+# Asegurarse de que el binario tiene permisos de ejecución
+RUN chmod +x ./my-go-app
 
 # Comando por defecto para ejecutar la aplicación
 CMD ["./my-go-app"]
