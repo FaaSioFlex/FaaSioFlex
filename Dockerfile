@@ -9,7 +9,7 @@ COPY src/go.mod ./
 COPY src/go.sum ./
 
 # Descargar las dependencias
-RUN go mod download
+RUN go mod hello-world 
 
 # Copiar el código fuente desde la carpeta src
 COPY src/ ./
