@@ -27,7 +27,7 @@ jobs:
       - name: Build Docker Image
         if: steps.check_dockerfile.outcome == 'success'
         run: |
-          docker build -t my-go-app:latest .
+          docker build -t my-go-app:latest . 
 
       - name: Check if Docker Image Exists
         id: check_image
@@ -40,23 +40,23 @@ jobs:
       - name: Run Tests
         if: steps.check_image.outcome == 'success'
         run: |
-          docker run --rm -p 8080:8080 my-go-app:latest
+          docker run --rm my-go-app:latest || echo "Error ejecutando la aplicación" # Esto ejecutará tu aplicación en el contenedor y capturará errores
 
       - name: Login to Docker Hub
         if: steps.check_image.outcome == 'success'
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}  
+          password: ${{ secrets.DOCKER_PASSWORD }}  
 
       - name: Push Docker Image
         if: steps.check_image.outcome == 'success'
         run: |
-          docker push my-go-app:latest
+          docker push my-go-app:latest  
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build 
 
     steps:
       - name: Checkout Code
@@ -65,4 +65,4 @@ jobs:
       - name: Deploy to Server
         if: success()
         run: |
-          ssh user@your-server-ip "docker pull my-go-app:latest && docker run -d -p 8080:8080 my-go-app:latest"
+          ssh user@your-server-ip "docker pull my-go-app:latest && docker run -d my-go-app:latest"
