@@ -3,12 +3,10 @@ name: Docker CI/CD
 on:
   push:
     branches:
-      - main
+      - main  # Lo haremos en la rama que estemos trabajando en cada momento.
 
 jobs:
-env:
-  ACTIONS_STEP_DEBUG: true
-build:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,38 +27,36 @@ build:
       - name: Build Docker Image
         if: steps.check_dockerfile.outcome == 'success'
         run: |
-          docker build -t my-go-app:latest .
+          docker build -t my-go-app:latest .  # Cambiar `your-image-name` por `my-go-app`
 
       - name: Check if Docker Image Exists
         id: check_image
         run: |
-          if ! docker images -q my-go-app:latest; then
+          if ! docker images -q my-go-app:latest; then  # Cambiar `your-image-name`
             echo "No Docker image found. No image was built."
             exit 1
           fi
 
-      - name: Run Application
+      - name: Run Tests
         if: steps.check_image.outcome == 'success'
         run: |
-          container_id=$(docker run -d -p 8080:8080 my-go-app:latest)
-          sleep 5
-          docker logs $container_id
+          docker run --rm -p 8080:8080 my-go-app:latest # Esto ejecutará tu aplicación en el contenedor
 
       - name: Login to Docker Hub
         if: steps.check_image.outcome == 'success'
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}  # Define este secreto en tu repositorio
+          password: ${{ secrets.DOCKER_PASSWORD }}  # Define este secreto en tu repositorio
 
       - name: Push Docker Image
         if: steps.check_image.outcome == 'success'
         run: |
-          docker push my-go-app:latest
+          docker push my-go-app:latest  # Cambiar `your-image-name` por `my-go-app`
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build  # Esto asegura que el trabajo de despliegue espere a que se complete el trabajo de construcción
 
     steps:
       - name: Checkout Code
@@ -70,5 +66,3 @@ build:
         if: success()
         run: |
           ssh user@your-server-ip "docker pull my-go-app:latest && docker run -d -p 8080:8080 my-go-app:latest"
-
-
