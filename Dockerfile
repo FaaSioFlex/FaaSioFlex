@@ -1,38 +1,34 @@
-# Usar una imagen base de Go para compilar la aplicación
-FROM golang:1.23 AS builder
+# Usa la imagen de Go
+FROM golang:alpine AS builder
 
-# Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar los archivos de módulo primero
-COPY src/go.mod src/go.sum ./
+# Copiar los archivos go.mod y go.sum
+COPY go.mod ./
+COPY go.sum ./
 
 # Descargar las dependencias
 RUN go mod download
 
-# Copiar el código fuente desde la carpeta src
-COPY src/ ./
+# Copiar el código fuente
+COPY src/main.go ./
 
 # Compilar la aplicación
-RUN go build -o my-go-app -v
-
-# Agregar comandos para depuración
-RUN echo "Contenido del directorio /app:" && ls -l /app
-RUN echo "Permisos del binario:" && ls -l /app/my-go-app
+RUN go build -o my-go-app
 
 # Usar una imagen base más pequeña para la producción
 FROM alpine:latest
 
-# Establecer el directorio de trabajo
-WORKDIR /root/
+WORKDIR /app
 
-# Copiar el binario compilado desde la etapa anterior
+# Copiar el binario desde la etapa de construcción
 COPY --from=builder /app/my-go-app .
 
-# Asegurarse de que el binario tiene permisos de ejecución
-RUN chmod +x ./my-go-app
+# Exponer el puerto en el que la aplicación escuchará
+EXPOSE 8080
 
-# Comando por defecto para ejecutar la aplicación
+# Comando para ejecutar la aplicación
 CMD ["./my-go-app"]
+
 
 
