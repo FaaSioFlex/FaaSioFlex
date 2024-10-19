@@ -4,8 +4,8 @@ FROM golang:alpine AS builder
 WORKDIR /app
 
 # Copiar los archivos go.mod y go.sum
-COPY go.mod ./
-COPY go.sum ./
+COPY  src/go.mod ./
+COPY src/go.sum ./
 
 # Descargar las dependencias
 RUN go mod download
