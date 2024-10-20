@@ -63,14 +63,14 @@ jobs:
         uses: actions/checkout@v2
 
       # Despliegue en Fly.io
-      - name: Log in to Fly.io
-        uses: flyctl-actions/login@v1
-        with:
-          api_token: ${{ secrets.FLY_API_TOKEN }}
+      # - name: Log in to Fly.io
+        # uses: flyctl-actions/login@v1
+        # with:
+          # api_token: ${{ secrets.FLY_API_TOKEN }}
 
-      - name: Deploy to Fly.io
-        run: |
-          flyctl deploy --remote-only --app faasioflex
+      # - name: Deploy to Fly.io
+       # run: |
+          # flyctl deploy --remote-only --app faasioflex
 
       # Despliegue en Heroku
       - name: Log in to Heroku
@@ -83,7 +83,7 @@ jobs:
           heroku container:release web --app faasioflex
 
       # Despliegue en tu servidor
-      - name: Deploy to Server
-        if: success()
-        run: |
-          ssh user@your-server-ip "docker pull my-go-app:latest && docker run -d my-go-app:latest"
+      # - name: Deploy to Server
+       # if: success()
+        # run: |
+          # ssh user@your-server-ip "docker pull my-go-app:latest && docker run -d my-go-app:latest"
