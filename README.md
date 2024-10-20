@@ -1,7 +1,7 @@
 
 <div style="text-align: center;">    
     <div style="display: flex; align-items: center; justify-content: center;">
-         <h1> FaaSioFlex<img src="https://github.com/user-attachments/assets/3871e51b-5eaa-4ba1-8f1b-6be3649a5833" alt="Logo" width="45" style="vertical-align:middle;"/>
+         <h1>  src="https://github.com/user-attachments/assets/3871e51b-5eaa-4ba1-8f1b-6be3649a5833" alt="Logo" width="45" style="vertical-align:middle;"/> FaaSioFlex<img
           </h1>
     </div>
 <br/>
