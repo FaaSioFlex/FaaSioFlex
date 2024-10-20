@@ -56,12 +56,33 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build 
+    needs: build
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      # Despliegue en Fly.io
+      - name: Log in to Fly.io
+        uses: flyctl-actions/login@v1
+        with:
+          api_token: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Deploy to Fly.io
+        run: |
+          flyctl deploy --remote-only --app faasioflex
+
+      # Despliegue en Heroku
+      - name: Log in to Heroku
+        run: |
+          echo "${{ secrets.HEROKU_API_KEY }}" | docker login --username _ --password-stdin registry.heroku.com
+
+      - name: Deploy to Heroku
+        run: |
+          heroku container:push web --app faasioflex
+          heroku container:release web --app faasioflex
+
+      # Despliegue en tu servidor
       - name: Deploy to Server
         if: success()
         run: |
