@@ -1,7 +1,7 @@
 <div style="text-align: center;">
     <div style="display: flex; align-items: center; justify-content: center;">
-        <img src="https://github.com/user-attachments/assets/3871e51b-5eaa-4ba1-8f1b-6be3649a5833" alt="Logo" width="25" style="vertical-align:middle;"/>
-        <span style="margin-left: 10px; font-size: 24px; font-weight: bold; text-decoration: underline;">FaaSioFlex</span>
+        <img src="https://github.com/user-attachments/assets/3871e51b-5eaa-4ba1-8f1b-6be3649a5833" alt="Logo" width="45" style="vertical-align:middle;"/>
+         <span style="margin-left: 10px; font-size: 44px; font-weight: bold; text-decoration: underline; white-space: nowrap;">FaaSioFlex</span>
     </div>
 <img src="https://github.com/user-attachments/assets/f607a8dc-ccd5-43fc-8581-1c4aaae67fce" alt="Imagen del proyecto" style="max-width: 100%; height: auto; margin: 20px 0;"/>
 <div style="max-width: 800px; margin: 0 auto;">
