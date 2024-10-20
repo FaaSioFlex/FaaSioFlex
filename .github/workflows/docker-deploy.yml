@@ -73,14 +73,14 @@ jobs:
           # flyctl deploy --remote-only --app faasioflex
 
       # Despliegue en Heroku
-      - name: Log in to Heroku
-        run: |
-          echo "${{ secrets.HEROKU_API_KEY }}" | docker login --username _ --password-stdin registry.heroku.com
+      #- name: Log in to Heroku
+       # run: |
+         # echo "${{ secrets.HEROKU_API_KEY }}" | docker login --username _ --password-stdin registry.heroku.com
 
-      - name: Deploy to Heroku
-        run: |
-          heroku container:push web --app faasioflex
-          heroku container:release web --app faasioflex
+      #- name: Deploy to Heroku
+       # run: |
+         # heroku container:push web --app faasioflex
+         # heroku container:release web --app faasioflex
 
       # Despliegue en tu servidor
       # - name: Deploy to Server
