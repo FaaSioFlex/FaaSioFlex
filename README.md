@@ -1,7 +1,7 @@
 <div style="text-align: center;">
     <div style="display: flex; align-items: center; justify-content: center;">
          <h1><img src="https://github.com/user-attachments/assets/3871e51b-5eaa-4ba1-8f1b-6be3649a5833" alt="Logo" width="45" style="vertical-align:middle;"/>
-         <span style="margin-left: 50px; font-size: 44px; font-weight: bold; text-decoration: underline; white-space: nowrap;">FaaSioFle</span>
+         <span style="margin-left: 10px; font-size: 64px; font-weight: bold; font-style: italic; text-decoration: underline; white-space: nowrap;">FaaSioFlex</span>
         </h1>
     </div>
 <br/>
