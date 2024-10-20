@@ -3,7 +3,8 @@
         <img src="https://github.com/user-attachments/assets/3871e51b-5eaa-4ba1-8f1b-6be3649a5833" alt="Logo" width="25" style="vertical-align:middle;"/>
         <span style="margin-left: 10px; font-size: 24px; font-weight: bold; text-decoration: underline;">FaaSioFlex</span>
     </div>
-    <img src="https://github.com/user-attachments/assets/f607a8dc-ccd5-43fc-8581-1c4aaae67fce" alt="Imagen del proyecto" style="max-width: 100%; height: auto; margin: 20px 0;"/>
+<img src="https://github.com/user-attachments/assets/f607a8dc-ccd5-43fc-8581-1c4aaae67fce" alt="Imagen del proyecto" style="max-width: 100%; height: auto; margin: 20px 0;"/>
+<div style="max-width: 800px; margin: 0 auto;">
     <p style="text-align: justify; margin: 20px 0;">
         FaaSioFlex es una plataforma de Function-as-a-Service (FaaS) que permite a los
         desarrolladores y usuarios gestionar y ejecutar funciones en un entorno escalable
@@ -20,8 +21,7 @@
         computación sin servidor basada en microservicios y cloud computing en sus proyectos.
     </p>
     <p style="text-align: justify; margin: 20px 0;">
-        Además, el GitHub Action ha sido configurado para hacer el despliegue tanto a un servidor propio
-        (añadiendo la IP del servidor) o a través de Fly.io.
+        Además, el GitHub Action ha sido configurado (docker-deploy.yml) para hacer el despliegue tanto a un servidor propio, a través de Fly.io, Heroku, Google Cloud Run o Render. Hay que descomentar la opción deseada en docker-deploy.yml.
     </p>
 </div>
 
