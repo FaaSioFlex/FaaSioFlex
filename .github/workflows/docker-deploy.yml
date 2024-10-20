@@ -87,3 +87,33 @@ jobs:
        # if: success()
         # run: |
           # ssh user@your-server-ip "docker pull my-go-app:latest && docker run -d my-go-app:latest"
+
+          # Despliegue en Google Cloud Run
+      #- name: Set up Google Cloud
+         #uses: google-github-actions/setup-gcloud@v0
+         #with:
+           #version: 'latest'
+           #project_id: ${{ secrets.GCP_PROJECT_ID }}
+           #service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+      #- name: Build and Push Docker image to Google Container Registry
+         #run: |
+           #docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/faasioflex .
+           #docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/faasioflex
+
+      #- name: Deploy to Google Cloud Run
+           #run: |
+             #gcloud run deploy faasioflex \
+               #--image gcr.io/${{ secrets.GCP_PROJECT_ID }}/faasioflex \
+               #--platform managed \
+               #--region us-central1 \
+               #--allow-unauthenticated
+
+  # Despliegue en Render
+      #- name: Deploy to Render
+            #run: |
+              #curl -X POST \
+              #-H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+              #-H "Content-Type: application/json" \
+              #--data '{"serviceId": "your-service-id", "branch": "main"}' \
+              #https://api.render.com/deploy/svc_your_service_id
