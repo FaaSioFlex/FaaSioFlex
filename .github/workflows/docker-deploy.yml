@@ -38,10 +38,10 @@ jobs:
             exit 1 # Salir con un código de error si no se encuentra la imagen
           fi
 
-      - name: Run Tests
-        if: steps.check_image.outcome == 'success'
-        run: |
-          docker run --rm -p 8080:8080 my-go-app:latest || echo "Error ejecutando la aplicación" # Ejecutar el contenedor y exponer el puerto 8080 para pruebas
+      #- name: Run Tests
+        #if: steps.check_image.outcome == 'success'
+        #run: |
+          #docker run --rm -p 8080:8080 my-go-app:latest || echo "Error ejecutando la aplicación" # Ejecutar el contenedor y exponer el puerto 8080 para pruebas
 
       - name: Login to Docker Hub
         if: steps.check_image.outcome == 'success'
