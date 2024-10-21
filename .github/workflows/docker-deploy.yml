@@ -60,6 +60,7 @@ jobs:
 
       - name: Set up Codespaces environment
         run: |
+          set -e  # Detener en el primer error
           # Eliminamos la cache
           sudo apt-get clean
           sudo rm -rf /var/lib/apt/lists/*
@@ -77,6 +78,7 @@ jobs:
           sudo apt-get install -y docker.io
           # Iniciar el servicio Docker
           sudo systemctl start docker
+          sudo systemctl enable docker  # Asegúrate de que Docker se inicie en el arranque
           # Agregar el usuario actual al grupo docker para evitar usar sudo
           sudo usermod -aG docker $USER
           # Recargar la sesión del usuario para aplicar el cambio de grupo
