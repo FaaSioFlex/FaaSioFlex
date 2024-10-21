@@ -81,9 +81,9 @@ jobs:
           sudo apt-get update
       - name: Instalar dependencias necesarias
         run: |
-          # Instalar dependencias necesarias
+          # Instalar dependencias necesarias ; containerd.io
           set -e
-          sudo apt-get install -y containerd.io docker.io
+          sudo apt-get install -y  docker.io
       - name: Fix broken packages
         run: |
           sudo apt-get update
