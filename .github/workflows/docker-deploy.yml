@@ -84,7 +84,15 @@ jobs:
           sudo usermod -aG docker $USER
           # Recargar la sesión del usuario para aplicar el cambio de grupo
           newgrp docker || true  # Evitar errores si se ejecuta en un entorno no interactivo
+  
+      - name: Check installed packages
+        run: |
+          dpkg -l | grep containerd
 
+      - name: Check sources list
+        run: |
+          cat /etc/apt/sources.list
+          ls /etc/apt/sources.list.d/
           
       - name: Fix broken packages
         run: |
