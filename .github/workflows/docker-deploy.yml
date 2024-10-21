@@ -57,7 +57,7 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-
+        
       - name: Set up Codespaces environment
         run: |
           set -e  # Detener en el primer error
@@ -70,12 +70,15 @@ jobs:
           if dpkg -l | grep -q containerd; then
             sudo apt-get remove -y containerd || true
             sudo apt-get purge -y containerd || true
-            sudo apt-get remove -y containerd containerd-runtime || true
-            sudo apt-get purge -y containerd containerd-runtime || true
           fi
 
-          # Instalar dependencias necesarias
+          # Eliminar cualquier paquete que pueda causar conflictos
+          sudo apt-get autoremove -y || true
+
+          # Actualizar el índice de paquetes
           sudo apt-get update
+
+          # Instalar dependencias necesarias
           sudo apt-get install -y containerd.io docker.io
       
           # Iniciar el servicio Docker
@@ -118,7 +121,6 @@ jobs:
             echo "Esperando a que la aplicación esté lista..."
             sleep 2
           done || echo "La aplicación no respondió correctamente"
-
       - name: Install ngrok
         run: |
           curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
