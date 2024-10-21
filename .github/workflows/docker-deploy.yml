@@ -60,29 +60,41 @@ jobs:
 
       - name: Set up Codespaces environment
         run: |
+          # Eliminar containerd para evitar conflictos
+          sudo apt-get remove -y containerd
+          # Actualizar e instalar dependencias necesarias
           sudo apt-get update
-          sudo apt-get install -y docker.io
+          sudo apt-get install -y containerd.io docker.io
+          # Iniciar el servicio Docker
           sudo systemctl start docker
+          # Agregar el usuario actual al grupo docker para evitar usar sudo
           sudo usermod -aG docker $USER
+          # Recargar la sesión del usuario para aplicar el cambio de grupo
+          newgrp docker
 
       - name: Run Docker container in Codespaces
         run: |
           docker run -d -p 8080:8080 --name my-go-app my-go-app:latest
-          sleep 5
-          curl http://localhost:8080 || echo "La aplicación no respondió correctamente"
+          # Esperar a que la aplicación esté lista
+          for i in {1..10}; do
+            curl -s http://localhost:8080 && break
+            echo "Esperando a que la aplicación esté lista..."
+            sleep 2
+          done || echo "La aplicación no respondió correctamente"
 
       - name: Install ngrok
         run: |
           curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
           echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
-          sudo apt update
-          sudo apt install -y ngrok
+          sudo apt-get update
+          sudo apt-get install -y ngrok
 
       - name: Run ngrok
         run: |
           nohup ngrok http 8080 > ngrok.log &
           sleep 5
-          NGROK_URL=$(curl -s http://localhost:4040/api/tunnels | grep -o "https://[0-9a-z\-]*.ngrok.io")
+          # Extraer la URL pública de ngrok
+          NGROK_URL=$(curl -s http://localhost:4040/api/tunnels | jq -r .tunnels[0].public_url)
           echo "La URL pública de ngrok es: $NGROK_URL"
         env:
           NGROK_AUTHTOKEN: ${{ secrets.NGROK_AUTHTOKEN }}
