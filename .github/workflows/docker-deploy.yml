@@ -60,8 +60,17 @@ jobs:
 
       - name: Set up Codespaces environment
         run: |
+          # Eliminamos la cache
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
+          sudo apt-get update          
           # Eliminar containerd para evitar conflictos
-          sudo apt-get remove -y containerd
+          # Comprobar si containerd está instalado y eliminarlo si es necesario
+          if dpkg -l | grep -q containerd; then
+              sudo apt-get remove -y containerd
+              sudo apt-get purge -y containerd
+          fi
+          apt-get install -f
           # Actualizar e instalar dependencias necesarias
           sudo apt-get update
           sudo apt-get install -y containerd.io
@@ -71,7 +80,7 @@ jobs:
           # Agregar el usuario actual al grupo docker para evitar usar sudo
           sudo usermod -aG docker $USER
           # Recargar la sesión del usuario para aplicar el cambio de grupo
-          newgrp docker
+          newgrp docker || true  # Evitar errores si se ejecuta en un entorno no interactivo
           
       - name: Fix broken packages
         run: |
