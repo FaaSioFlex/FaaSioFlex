@@ -64,14 +64,28 @@ jobs:
           sudo apt-get remove -y containerd
           # Actualizar e instalar dependencias necesarias
           sudo apt-get update
-          sudo apt-get install -y containerd.io docker.io
+          sudo apt-get install -y containerd.io
+          sudo apt-get install -y docker.io
           # Iniciar el servicio Docker
           sudo systemctl start docker
           # Agregar el usuario actual al grupo docker para evitar usar sudo
           sudo usermod -aG docker $USER
           # Recargar la sesión del usuario para aplicar el cambio de grupo
           newgrp docker
-
+          
+      - name: Fix broken packages
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade -y
+          sudo apt-get install -f
+          
+      - name: Clean APT cache
+        run: |
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
+          sudo apt-get update
+          sudo apt-get install -y containerd.io docker.io   
+          
       - name: Run Docker container in Codespaces
         run: |
           docker run -d -p 8080:8080 --name my-go-app my-go-app:latest
