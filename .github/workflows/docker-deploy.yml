@@ -61,34 +61,32 @@ jobs:
       - name: Set up Codespaces environment
         run: |
           set -e  # Detener en el primer error
+          
           # Limpieza de la caché y eliminación de listas
           sudo apt-get clean
           sudo rm -rf /var/lib/apt/lists/*
           sudo apt-get update
-
+          
           # Comprobar y eliminar containerd si está instalado
           if dpkg -l | grep -q containerd; then
             sudo apt-get remove -y containerd || true
             sudo apt-get purge -y containerd || true
           fi
-
+          
           # Eliminar cualquier paquete que pueda causar conflictos
           sudo apt-get autoremove -y || true
-
-          # Actualizar el índice de paquetes
-          sudo apt-get update
-
+          
           # Instalar dependencias necesarias
+          sudo apt-get update
           sudo apt-get install -y containerd.io docker.io
-      
+          
           # Iniciar el servicio Docker
           sudo systemctl start docker || true
           sudo systemctl enable docker || true  # Asegúrate de que Docker se inicie en el arranque
-
-          # Agregar el usuario actual al grupo docker
-          sudo usermod -aG docker $USER
-          # Recargar la sesión del usuario para aplicar el cambio de grupo
-          newgrp docker || true  # Evitar errores si se ejecuta en un entorno no interactivo
+          
+          # Agregar el usuario actual al grupo docker (en GitHub Actions, este paso no es necesario)
+          # El siguiente comando no tiene efecto, así que se omite
+          # sudo usermod -aG docker $USER
   
       - name: Check installed packages
         run: |
