@@ -70,6 +70,8 @@ jobs:
           if dpkg -l | grep -q containerd; then
             sudo apt-get remove -y containerd || true
             sudo apt-get purge -y containerd || true
+            sudo apt-get remove -y containerd containerd-runtime || true
+            sudo apt-get purge -y containerd containerd-runtime || true
           fi
 
           # Instalar dependencias necesarias
