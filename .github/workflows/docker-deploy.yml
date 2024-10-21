@@ -21,27 +21,27 @@ jobs:
         id: check_dockerfile
         run: |
           if [ ! -f Dockerfile ]; then
-            echo "Dockerfile not found, exiting."
-            exit 1
+            echo "Dockerfile not found, exiting." # Comprobar si existe el archivo Dockerfile
+            exit 1 # Salir con un código de error si no se encuentra el Dockerfile
           fi
 
       - name: Build Docker Image
         if: steps.check_dockerfile.outcome == 'success'
         run: |
-          docker build -t my-go-app:latest . 
+          docker build -t my-go-app:latest . # Construir la imagen Docker con la etiqueta my-go-app:latest
 
       - name: Check if Docker Image Exists
         id: check_image
         run: |
           if ! docker images -q my-go-app:latest; then
-            echo "No Docker image found. No image was built."
-            exit 1
+            echo "No Docker image found. No image was built." # Verificar si la imagen Docker se construyó correctamente
+            exit 1 # Salir con un código de error si no se encuentra la imagen
           fi
 
       - name: Run Tests
         if: steps.check_image.outcome == 'success'
         run: |
-          docker run --rm my-go-app:latest || echo "Error ejecutando la aplicación" # Esto ejecutará tu aplicación en el contenedor y capturará errores
+          docker run --rm -p 8080:8080 my-go-app:latest || echo "Error ejecutando la aplicación" # Ejecutar el contenedor y exponer el puerto 8080 para pruebas
 
       - name: Login to Docker Hub
         if: steps.check_image.outcome == 'success'
@@ -54,7 +54,39 @@ jobs:
         if: steps.check_image.outcome == 'success'
         run: |
           docker push my-go-app:latest  
+ # Job para ejecutar en Codespaces (pruebas)
+  run_in_codespace:
+    runs-on: ubuntu-latest # Usar el último sistema operativo Ubuntu para el trabajo
+    needs: build # Este trabajo depende del trabajo de compilación
 
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3 # Clonar el código fuente del repositorio
+
+      - name: Set up Codespaces environment
+        run: |
+          # Configuración para ejecutar Docker en Codespaces
+          sudo apt-get update # Actualizar la lista de paquetes
+          sudo apt-get install -y docker.io # Instalar Docker en el entorno
+          sudo systemctl start docker # Iniciar el servicio de Docker
+          sudo usermod -aG docker $USER # Agregar el usuario actual al grupo de Docker
+
+      - name: Run Docker container in Codespaces
+        run: |
+          # Ejecutar el contenedor en Codespaces
+          docker run -d -p 8080:8080 --name my-go-app my-go-app:latest # Ejecutar el contenedor en segundo plano y exponer el puerto 8080
+          # Esperar unos segundos para que el contenedor esté listo
+          sleep 5 # Pausa de 5 segundos para dar tiempo al contenedor a iniciar
+          # Probar si la aplicación responde en el puerto 8080
+          curl http://localhost:8080 || echo "La aplicación no respondió correctamente" # Verificar si la aplicación está respondiendo
+
+      - name: Stop and Remove Docker container
+        if: always() # Ejecutar siempre este paso, incluso si los anteriores fallan
+        run: |
+          docker stop my-go-app # Detener el contenedor
+          docker rm my-go-app # Eliminar el contenedor
+
+  # Despliegue en varias plataformas (comentado)
   deploy:
     runs-on: ubuntu-latest
     needs: build
