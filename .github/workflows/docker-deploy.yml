@@ -69,17 +69,27 @@ jobs:
           
           # Comprobar y eliminar containerd si está instalado
           if dpkg -l | grep -q containerd; then
-            sudo apt-get remove -y containerd || true
+            sudo apt-get remove --purge -y containerd containerd.io || true
             sudo apt-get purge -y containerd || true
+            sudo apt-get autoremove -y || true
           fi
           
           # Eliminar cualquier paquete que pueda causar conflictos
           sudo apt-get autoremove -y || true
-          
-          # Instalar dependencias necesarias
+      - name: Update package list
+        run: |
           sudo apt-get update
+      - name: Instalar dependencias necesarias
+        run: |
+          # Instalar dependencias necesarias
+          set -e
           sudo apt-get install -y containerd.io docker.io
-          
+      - name: Fix broken packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -f
+      - name: Iniciar el servicio Docker
+        run: |   
           # Iniciar el servicio Docker
           sudo systemctl start docker || true
           sudo systemctl enable docker || true  # Asegúrate de que Docker se inicie en el arranque
