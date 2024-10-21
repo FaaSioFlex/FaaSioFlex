@@ -79,6 +79,21 @@ jobs:
           sleep 5 # Pausa de 5 segundos para dar tiempo al contenedor a iniciar
           # Probar si la aplicación responde en el puerto 8080
           curl http://localhost:8080 || echo "La aplicación no respondió correctamente" # Verificar si la aplicación está respondiendo
+      - name: Install ngrok # Paso para instalar ngrok en el entorno
+        run: |
+          curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null # Importar la clave pública de ngrok
+          echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list # Agregar el repositorio de ngrok
+          sudo apt update # Actualizar la lista de paquetes
+          sudo apt install -y ngrok # Instalar ngrok
+
+      - name: Run ngrok # Ejecutar ngrok para exponer el puerto 8080
+        run: |
+          nohup ngrok http 8080 > ngrok.log & # Iniciar ngrok en segundo plano, exponiendo el puerto 8080
+          sleep 5 # Pausa para dar tiempo a ngrok a iniciar
+          NGROK_URL=$(curl -s http://localhost:4040/api/tunnels | grep -o "https://[0-9a-z\-]*.ngrok.io") # Obtener la URL pública generada por ngrok
+          echo "La URL pública de ngrok es: $NGROK_URL" # Imprimir la URL pública en los logs
+        env:
+          NGROK_AUTHTOKEN: ${{ secrets.NGROK_AUTHTOKEN }} # Token de autenticación para ngrok (debe configurarse como un secreto en el repositorio)
 
       - name: Stop and Remove Docker container
         if: always() # Ejecutar siempre este paso, incluso si los anteriores fallan
