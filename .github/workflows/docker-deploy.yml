@@ -83,10 +83,7 @@ jobs:
           # Instalar dependencias necesarias ; containerd.io
           set -e
           sudo apt-get install -y  docker.io
-      - name: Fix broken packages
-        run: |
-          sudo apt-get update
-          sudo apt-get install -f
+
       - name: Iniciar el servicio Docker
         run: |   
           # Iniciar el servicio Docker
